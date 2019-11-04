@@ -1179,13 +1179,8 @@ ClusterIcon.prototype.useStyle = function() {
   var index = Math.max(0, this.sums_.index - 1);
   index = Math.min(this.styles_.length - 1, index);
   var style = this.styles_[index];
-  this.url_ = style['url'];
   this.height_ = style['height'];
   this.width_ = style['width'];
-  this.textColor_ = style['textColor'];
-  this.anchor_ = style['anchor'];
-  this.textSize_ = style['textSize'];
-  this.backgroundPosition_ = style['backgroundPosition'];
 };
 
 
@@ -1198,7 +1193,6 @@ ClusterIcon.prototype.setCenter = function(center) {
   this.center_ = center;
 };
 
-
 /**
  * Create the css text based on the position of the icon.
  *
@@ -1207,37 +1201,15 @@ ClusterIcon.prototype.setCenter = function(center) {
  */
 ClusterIcon.prototype.createCss = function(pos) {
   var style = [];
-  style.push('background-image:url(' + this.url_ + ');');
-  var backgroundPosition = this.backgroundPosition_ ? this.backgroundPosition_ : '0 0';
-  style.push('background-position:' + backgroundPosition + ';');
 
-  if (typeof this.anchor_ === 'object') {
-    if (typeof this.anchor_[0] === 'number' && this.anchor_[0] > 0 &&
-        this.anchor_[0] < this.height_) {
-      style.push('height:' + (this.height_ - this.anchor_[0]) +
-          'px; padding-top:' + this.anchor_[0] + 'px;');
-    } else {
-      style.push('height:' + this.height_ + 'px; line-height:' + this.height_ +
-          'px;');
-    }
-    if (typeof this.anchor_[1] === 'number' && this.anchor_[1] > 0 &&
-        this.anchor_[1] < this.width_) {
-      style.push('width:' + (this.width_ - this.anchor_[1]) +
-          'px; padding-left:' + this.anchor_[1] + 'px;');
-    } else {
-      style.push('width:' + this.width_ + 'px; text-align:center;');
-    }
-  } else {
-    style.push('height:' + this.height_ + 'px; line-height:' +
-        this.height_ + 'px; width:' + this.width_ + 'px; text-align:center;');
-  }
-
-  var txtColor = this.textColor_ ? this.textColor_ : 'black';
-  var txtSize = this.textSize_ ? this.textSize_ : 11;
-
+  var index = Math.max(0, this.sums_.index - 1);
+  index = Math.min(this.styles_.length - 1, index);
+  let currentStyle = this.styles_[index];
   style.push('cursor:pointer; top:' + pos.y + 'px; left:' +
-      pos.x + 'px; color:' + txtColor + '; position:absolute; font-size:' +
-      txtSize + 'px; font-family:Arial,sans-serif; font-weight:bold');
+      pos.x + 'px; position:absolute; width: ' + this.width_ + 'px; height: ' + this.height_ + 'px; ');
+  for (let key of Object.keys(currentStyle)) {
+    style.push(`${key}: ${currentStyle[key]}; `);
+  }
   return style.join('');
 };
 
